@@ -27,6 +27,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    private int password;
+    private String password;
 
 }
