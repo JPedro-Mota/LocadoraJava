@@ -16,8 +16,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/publisher/**").permitAll()
                         .anyRequest().authenticated()
-                );
+                )
+                .httpBasic();
 
         return http.build();
     }

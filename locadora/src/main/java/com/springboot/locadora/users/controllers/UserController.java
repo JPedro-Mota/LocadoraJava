@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
     }
     userRepository.delete(userO.get());
-    return ResponseEntity.status(HttpStatus.OK).body("User deleted sucessfully.");
+    return ResponseEntity.status(HttpStatus.OK).body("User deleted sucessfull.");
     }
 
 }
