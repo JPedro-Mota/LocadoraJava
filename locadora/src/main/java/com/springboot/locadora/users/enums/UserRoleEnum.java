@@ -1,5 +1,16 @@
 package com.springboot.locadora.users.enums;
 
 public enum UserRoleEnum {
-    ADMIN, USER
+    ADMIN("admin"),
+    USER("user");
+
+    private String role;
+
+    UserRoleEnum(String role){
+        this.role = role;
+    }
+
+    public String getRole(){
+        return role;
+    }
 }
