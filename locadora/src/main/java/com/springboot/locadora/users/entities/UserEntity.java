@@ -10,13 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
-@Entity(name = "users")
+@Entity
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails {
 
@@ -33,22 +31,34 @@ public class UserEntity implements UserDetails {
 
     private String password;
 
+    public UserEntity(String name, String email, String password, UserRoleEnum role){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == UserRoleEnum.ADMIN) return
-                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                        new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == UserRoleEnum.ADMIN)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return name;
+        return this.name;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -65,5 +75,4 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

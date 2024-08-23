@@ -1,13 +1,12 @@
 package com.springboot.locadora.users.DTOs;
 
 import com.springboot.locadora.users.enums.UserRoleEnum;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 public record UserRecordDto(
-        @NotBlank String name,
-        @Email @NotBlank String email,
-        @NotNull UserRoleEnum role,
-        @NotBlank String password) {
+        int id,
+        String name,
+        String email,
+        UserRoleEnum role)  {
 }
