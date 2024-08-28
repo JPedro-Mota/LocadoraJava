@@ -21,14 +21,10 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
     private String name;
-
     private String email;
-
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
-
     private String password;
 
     public UserEntity(String name, String email, String password, UserRoleEnum role){

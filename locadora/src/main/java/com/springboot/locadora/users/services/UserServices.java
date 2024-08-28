@@ -1,7 +1,7 @@
 package com.springboot.locadora.users.services;
 
-import com.springboot.locadora.users.DTOs.CreateUserRequestDTO;
-import com.springboot.locadora.users.DTOs.UpdateUserRequestDTO;
+import com.springboot.locadora.users.DTOs.CreateUserRecordDTO;
+import com.springboot.locadora.users.DTOs.UpdateUserRecordDTO;
 import com.springboot.locadora.users.entities.UserEntity;
 import com.springboot.locadora.users.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class UserServices {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public ResponseEntity<Void> create(@Valid CreateUserRequestDTO data) {
+    public ResponseEntity<Void> create(@Valid CreateUserRecordDTO data) {
         if (userRepository.findByName(data.name()) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -47,7 +47,7 @@ public class UserServices {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity<Object> update(int id, @Valid UpdateUserRequestDTO updateUserRequestDTO){
+    public ResponseEntity<Object> update(int id, @Valid UpdateUserRecordDTO updateUserRequestDTO){
         Optional<UserEntity> response = userRepository.findById(id);
         if(response.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

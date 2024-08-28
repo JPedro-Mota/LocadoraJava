@@ -1,6 +1,6 @@
 package com.springboot.locadora.publisher.services;
 
-import com.springboot.locadora.publisher.DTOs.PublisherRecordDto;
+import com.springboot.locadora.publisher.DTOs.PublisherRecordDTO;
 import com.springboot.locadora.publisher.entities.PublisherEntity;
 import com.springboot.locadora.publisher.repositories.PublisherRepository;
 import jakarta.validation.Valid;
@@ -20,14 +20,14 @@ public class PublisherServices {
     @Autowired
     private PublisherRepository publisherRepository;
 
-    public ResponseEntity<PublisherEntity> savePublisher(@RequestBody @Valid PublisherRecordDto publisherRecordDto){
+    public ResponseEntity<PublisherEntity> savePublisher(@RequestBody @Valid PublisherRecordDTO publisherRecordDto){
         var publisherEntity = new PublisherEntity();
         BeanUtils.copyProperties(publisherRecordDto, publisherEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(publisherRepository.save(publisherEntity));
     }
 
     public ResponseEntity<List<PublisherEntity>> getAllPublisher(){
-        return ResponseEntity.status(HttpStatus.OK).body(publisherRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(publisherRepository.findAllByIsDeletedFalse());
     }
 
     public ResponseEntity<Object> getOnePublisher(int id){
@@ -38,7 +38,7 @@ public class PublisherServices {
         return ResponseEntity.status(HttpStatus.OK).body(publisherO.get());
     }
 
-    public ResponseEntity<Object> updatePublisher(int id, @RequestBody @Valid PublisherRecordDto publisherRecordDto){
+    public ResponseEntity<Object> updatePublisher(int id, @RequestBody @Valid PublisherRecordDTO publisherRecordDto){
         Optional<PublisherEntity> publisherO = publisherRepository.findById(id);
         if(publisherO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publisher not found.");

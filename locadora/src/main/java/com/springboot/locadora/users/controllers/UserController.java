@@ -1,7 +1,7 @@
 package com.springboot.locadora.users.controllers;
 
-import com.springboot.locadora.users.DTOs.CreateUserRequestDTO;
-import com.springboot.locadora.users.DTOs.UpdateUserRequestDTO;
+import com.springboot.locadora.users.DTOs.CreateUserRecordDTO;
+import com.springboot.locadora.users.DTOs.UpdateUserRecordDTO;
 import com.springboot.locadora.users.DTOs.UserRecordDto;
 import com.springboot.locadora.users.mappers.UserMapper;
 import com.springboot.locadora.users.services.UserServices;
@@ -23,7 +23,7 @@ public class UserController {
     UserServices userServices;
 
     @PostMapping("/user")
-    public ResponseEntity<Void> create(@RequestBody @Valid CreateUserRequestDTO data) {
+    public ResponseEntity<Void> create(@RequestBody @Valid CreateUserRecordDTO data) {
         return userServices.create(data);
     }
 
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<Object> update(@PathVariable(value="id") int id, @RequestBody @Valid UpdateUserRequestDTO updateUserRequestDTO){
+    public ResponseEntity<Object> update(@PathVariable(value="id") int id, @RequestBody @Valid UpdateUserRecordDTO updateUserRequestDTO){
         return userServices.update(id, updateUserRequestDTO);
     }
 
