@@ -1,6 +1,7 @@
 package com.springboot.locadora.renters.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
@@ -19,6 +20,7 @@ public class RenterEntity {
 
     private String name;
 
+    @Email
     private String email;
 
     @CPF

@@ -2,7 +2,12 @@ package com.springboot.locadora.users.entities;
 
 import com.springboot.locadora.users.enums.UserRoleEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +25,11 @@ public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotBlank
     private int id;
+    @NotBlank
     private String name;
+    @Email
     private String email;
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
