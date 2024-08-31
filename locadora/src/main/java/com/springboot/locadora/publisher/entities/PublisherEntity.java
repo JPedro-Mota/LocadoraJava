@@ -1,6 +1,7 @@
 package com.springboot.locadora.publisher.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class PublisherEntity {
 
     private String name;
 
+    @Email
     private String email;
 
     private String telephone;
