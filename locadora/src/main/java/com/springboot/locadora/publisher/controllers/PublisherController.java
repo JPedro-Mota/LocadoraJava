@@ -1,5 +1,6 @@
 package com.springboot.locadora.publisher.controllers;
 
+import com.springboot.locadora.publisher.DTOs.CreatePublisherRecordDTO;
 import com.springboot.locadora.publisher.DTOs.PublisherRecordDTO;
 import com.springboot.locadora.publisher.entities.PublisherEntity;
 import com.springboot.locadora.publisher.repositories.PublisherRepository;
@@ -23,8 +24,8 @@ public class PublisherController {
     PublisherServices publisherServices;
 
     @PostMapping("/publisher")
-    public ResponseEntity<PublisherEntity> savePublisher(@RequestBody @Valid PublisherRecordDTO publisherRecordDto){
-        return publisherServices.savePublisher(publisherRecordDto);
+    public ResponseEntity<PublisherEntity> savePublisher(@Valid CreatePublisherRecordDTO createPublisherRecordDTO){
+        return publisherServices.create(createPublisherRecordDTO);
     }
 
     @GetMapping("/publisher")

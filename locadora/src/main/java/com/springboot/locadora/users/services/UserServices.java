@@ -4,6 +4,7 @@ import com.springboot.locadora.users.DTOs.CreateUserRecordDTO;
 import com.springboot.locadora.users.DTOs.UpdateUserRecordDTO;
 import com.springboot.locadora.users.entities.UserEntity;
 import com.springboot.locadora.users.repositories.UserRepository;
+import com.springboot.locadora.users.validations.UserValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,13 @@ public class UserServices {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserValidation userValidation;
+
     public ResponseEntity<Void> create(@Valid CreateUserRecordDTO data) {
-        if (userRepository.findByName(data.name()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+
+        userValidation.validateName((data));
+        userValidation.validateEmail(data);
 
         String encryptedPassword = passwordEncoder.encode(data.password());
         UserEntity newUser = new UserEntity(data.name(), data.email(), encryptedPassword, data.role());
@@ -47,23 +51,23 @@ public class UserServices {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity<Object> update(int id, @Valid UpdateUserRecordDTO updateUserRequestDTO){
+    public ResponseEntity<Object> update(int id, @Valid UpdateUserRecordDTO updateUserRecordDTO){
         Optional<UserEntity> response = userRepository.findById(id);
         if(response.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+
+        userValidation.validateUpdateEmail(updateUserRecordDTO);
+        userValidation.validateUpdateName(updateUserRecordDTO);
         var userEntity = response.get();
-        BeanUtils.copyProperties(updateUserRequestDTO, userEntity);
+        BeanUtils.copyProperties(updateUserRecordDTO, userEntity);
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(userEntity));
     }
 
     public ResponseEntity<Object> delete(int id){
         Optional<UserEntity> response = userRepository.findById(id);
-        if(response.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        if(response.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         userRepository.delete(response.get());
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
-
 }

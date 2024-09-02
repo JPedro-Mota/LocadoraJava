@@ -25,9 +25,7 @@ public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotBlank
     private int id;
-    @NotBlank
     private String name;
     @Email
     private String email;

@@ -1,7 +1,7 @@
 package com.springboot.locadora.users.validations;
 
-import com.springboot.locadora.renters.DTOs.CreateRenterRecordDTO;
 import com.springboot.locadora.renters.DTOs.UpdateRenterRecordDTO;
+import com.springboot.locadora.users.DTOs.CreateUserRecordDTO;
 import com.springboot.locadora.users.DTOs.UpdateUserRecordDTO;
 import com.springboot.locadora.users.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,13 @@ public class UserValidation {
 
     private final UserRepository userRepository;
 
-    public void validateEmail(CreateRenterRecordDTO data) {
+    public void validateName(CreateUserRecordDTO data){
+        if (userRepository.findByName(data.name()) != null){
+            throw new CustomValidationException("Name already in use");
+        }
+    }
+
+    public void validateEmail(CreateUserRecordDTO data) {
         if (userRepository.findByEmail(data.email()) != null) {
             throw new CustomValidationException("Email already in use");
         }
@@ -25,9 +31,9 @@ public class UserValidation {
         }
     }
 
-    public void validateUpdateRenterEmail(UpdateRenterRecordDTO data) {
-        if (userRepository.findByEmail(data.email()) != null) {
-            throw new CustomValidationException("Email already in use.");
+    public void validateUpdateName(UpdateUserRecordDTO data){
+        if (userRepository.findByName(data.name()) != null){
+            throw new CustomValidationException("Name already in use");
         }
     }
 }
