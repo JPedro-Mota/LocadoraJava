@@ -59,7 +59,7 @@ public class UserServices {
 
         userValidation.validateUpdateEmail(updateUserRecordDTO);
         userValidation.validateUpdateName(updateUserRecordDTO);
-        var userEntity = response.get();
+        UserEntity userEntity = response.get();
         BeanUtils.copyProperties(updateUserRecordDTO, userEntity);
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(userEntity));
     }

@@ -4,17 +4,13 @@ import com.springboot.locadora.renters.DTOs.CreateRenterRecordDTO;
 import com.springboot.locadora.renters.DTOs.UpdateRenterRecordDTO;
 import com.springboot.locadora.renters.entities.RenterEntity;
 import com.springboot.locadora.renters.repositories.RenterRepository;
-import com.springboot.locadora.users.DTOs.CreateUserRecordDTO;
-import com.springboot.locadora.users.DTOs.UpdateUserRecordDTO;
-import com.springboot.locadora.users.entities.UserEntity;
-import com.springboot.locadora.users.repositories.UserRepository;
+import com.springboot.locadora.renters.validations.RenterValidation;
 import com.springboot.locadora.users.services.ModelNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +22,13 @@ public class RenterServices {
     @Autowired
     private RenterRepository renterRepository;
 
-//    @Autowired
-//    private RenterValidation renterValidation;
+    @Autowired
+    private RenterValidation renterValidation;
 
     public ResponseEntity<Void> create(@Valid CreateRenterRecordDTO data){
+
+        renterValidation.validateEmail(data);
+        renterValidation.validateName(data);
 
         RenterEntity newRenter = new RenterEntity(data.name(), data.email(), data.cpf(), data.telephone(), data.address());
         renterRepository.save(newRenter);
@@ -52,6 +51,8 @@ public class RenterServices {
         Optional<RenterEntity> response = renterRepository.findById(id);
         if(response.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Renter not found");
 
+        renterValidation.validateUpdateEmail(updateRenterRecordDTO);
+        renterValidation.validateUpdateName(updateRenterRecordDTO);
         RenterEntity renterEntity = response.get();
         BeanUtils.copyProperties(updateRenterRecordDTO, renterEntity);
         return ResponseEntity.status(HttpStatus.OK).body(renterRepository.save(renterEntity));

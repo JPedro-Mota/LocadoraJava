@@ -2,7 +2,9 @@ package com.springboot.locadora.publisher.controllers;
 
 import com.springboot.locadora.publisher.DTOs.CreatePublisherRecordDTO;
 import com.springboot.locadora.publisher.DTOs.PublisherRecordDTO;
+import com.springboot.locadora.publisher.DTOs.UpdatePublisherRecordDTO;
 import com.springboot.locadora.publisher.entities.PublisherEntity;
+import com.springboot.locadora.publisher.mappers.PublisherMapper;
 import com.springboot.locadora.publisher.repositories.PublisherRepository;
 import com.springboot.locadora.publisher.services.PublisherServices;
 import jakarta.validation.Valid;
@@ -23,8 +25,11 @@ public class PublisherController {
     @Autowired
     PublisherServices publisherServices;
 
+    @Autowired
+    PublisherMapper publisherMapper;
+
     @PostMapping("/publisher")
-    public ResponseEntity<PublisherEntity> savePublisher(@Valid CreatePublisherRecordDTO createPublisherRecordDTO){
+    public ResponseEntity<PublisherEntity> save(@Valid CreatePublisherRecordDTO createPublisherRecordDTO){
         return publisherServices.create(createPublisherRecordDTO);
     }
 
@@ -34,17 +39,17 @@ public class PublisherController {
     }
 
     @GetMapping("/publisher/{id}")
-    public ResponseEntity<Object> getOnePublisher(@PathVariable(value="id") int id){
-        return publisherServices.getOnePublisher(id);
+    public ResponseEntity<PublisherRecordDTO> getById(@PathVariable(value = "id") int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(publisherMapper.toPublisherResponse(publisherServices.findById(id).get()));
     }
 
     @PutMapping("/publisher/{id}")
-    public ResponseEntity<Object> updatePublisher(@PathVariable(value="id") int id, @RequestBody @Valid PublisherRecordDTO publisherRecordDto){
-        return publisherServices.updatePublisher(id, publisherRecordDto);
+    public ResponseEntity<Object> update (@PathVariable(value="id") int id, @Valid UpdatePublisherRecordDTO updatePublisherRecordDTO){
+        return publisherServices.update(id, updatePublisherRecordDTO);
     }
 
     @DeleteMapping("/publisher/{id}")
     public ResponseEntity<Object> deletePublisher(@PathVariable(value="id") int id){
-        return publisherServices.deletePublisher(id);
+        return publisherServices.delete(id);
     }
 }
