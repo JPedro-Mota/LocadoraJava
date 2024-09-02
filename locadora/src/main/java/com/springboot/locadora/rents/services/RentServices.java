@@ -1,9 +1,7 @@
 package com.springboot.locadora.rents.services;
 
-import com.springboot.locadora.books.DTOs.UpdateBookRecordDTO;
 import com.springboot.locadora.books.entities.BooksEntity;
 import com.springboot.locadora.books.repositories.BooksRepository;
-import com.springboot.locadora.publisher.entities.PublisherEntity;
 import com.springboot.locadora.renters.entities.RenterEntity;
 import com.springboot.locadora.renters.repositories.RenterRepository;
 import com.springboot.locadora.rents.DTOs.CreateRentsRecordDTO;
@@ -11,14 +9,15 @@ import com.springboot.locadora.rents.DTOs.UpdateRentsRecordDTO;
 import com.springboot.locadora.rents.entities.RentsEntity;
 import com.springboot.locadora.rents.enums.RentStatusEnum;
 import com.springboot.locadora.rents.repositories.RentRepository;
+import com.springboot.locadora.rents.validations.RentValidation;
 import com.springboot.locadora.users.services.ModelNotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class RentServices {
 
     @Autowired
-    private static RentRepository rentRepository;
+    private RentRepository rentRepository;
 
     @Autowired
     private BooksRepository booksRepository;
@@ -34,7 +33,10 @@ public class RentServices {
     @Autowired
     private RenterRepository renterRepository;
 
-    public ResponseEntity<Void> create (@Valid CreateRentsRecordDTO data){
+    @Autowired
+    private RentValidation rentValidation;
+
+    public ResponseEntity<Void> create(@Valid CreateRentsRecordDTO data) {
 
         RenterEntity renter = renterRepository.findById(data.renterId())
                 .orElseThrow(() -> new IllegalArgumentException("Renter not found"));
@@ -49,32 +51,52 @@ public class RentServices {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<List<RentsEntity>> findAll(){
+    public ResponseEntity<List<RentsEntity>> findAll() {
         List<RentsEntity> rents = rentRepository.findAll();
         if (rents.isEmpty()) throw new ModelNotFoundException();
         return ResponseEntity.ok(rents);
     }
 
-    public Optional<RenterEntity> findById (int id){
+    public Optional<RenterEntity> findById(int id) {
         return renterRepository.findById(id);
     }
 
-    public static ResponseEntity<Object> updateRent(int id, @Valid UpdateRentsRecordDTO rentsRecordDto) {
+    public ResponseEntity<Object> delivered(int id, @Valid UpdateRentsRecordDTO rentsRecordDto) {
         Optional<RentsEntity> rentOptional = rentRepository.findById(id);
         if (rentOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rent not found.");
         }
-        var rentEntity = rentOptional.get();
-        BeanUtils.copyProperties(rentsRecordDto, rentEntity);
-        return ResponseEntity.status(HttpStatus.OK).body(rentRepository.save(rentEntity));
+        RentsEntity rent = rentOptional.get();
+
+        rent.setDevolutionDate(LocalDate.now());
+
+        rentValidation.setRentStatus(rent);
+
+        rentRepository.save(rent);
+        return ResponseEntity.status(HttpStatus.OK).body(rent);
     }
 
-    public ResponseEntity<Object> deleteRent(int id) {
+    public ResponseEntity<Object> update(int id, @Valid UpdateRentsRecordDTO updateRentRecordDTO) {
         Optional<RentsEntity> rentOptional = rentRepository.findById(id);
         if (rentOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rent not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rent not found");
         }
-        rentRepository.delete(rentOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Rent deleted successfully.");
+
+        rentValidation.validateRenterIdUpdate(updateRentRecordDTO);
+        RenterEntity renter = renterRepository.findById(updateRentRecordDTO.renterId()).get();
+
+        rentValidation.validateBookIdUpdate(updateRentRecordDTO);
+        BooksEntity book = booksRepository.findById(updateRentRecordDTO.bookId()).get();
+
+        rentValidation.validateDeadLineUpdate(updateRentRecordDTO);
+        rentValidation.validateBookTotalQuantity(book);
+
+        RentsEntity rentModel = rentOptional.get();
+        rentModel.setBook(book);
+        rentModel.setRenter(renter);
+
+        rentRepository.save(rentModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Rent updated successfully");
     }
 }

@@ -34,13 +34,15 @@ public class RentsController {
         return ResponseEntity.status(HttpStatus.OK).body((rentServices.findById(id).get()));
     }
 
-    @PutMapping("/rents/{id}")
-    public ResponseEntity<Object> update(@PathVariable(value="id") int id, @RequestBody @Valid UpdateRentsRecordDTO updateRentsRecordDTO){
-        return RentServices.updateRent(id, updateRentsRecordDTO);
+    @PutMapping("/rent/{id}")
+    public ResponseEntity<Object> delivered(
+            @PathVariable int id, @RequestBody @Valid UpdateRentsRecordDTO data) {
+        return rentServices.delivered(id, data);
     }
 
-    @DeleteMapping("/rents/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(value="id") int id){
-        return rentServices.deleteRent(id);
+    @PutMapping("/rent/update/{id}")
+    public ResponseEntity<Object> update(
+            @PathVariable int id, @RequestBody @Valid UpdateRentsRecordDTO data) {
+        return rentServices.update(id,data);
     }
 }

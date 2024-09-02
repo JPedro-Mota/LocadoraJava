@@ -31,11 +31,15 @@ public class RenterEntity {
 
     private String address;
 
+    private boolean isDeleted;
+
+
     public RenterEntity(String name, String email, @CPF String cpf, @NotBlank String telephone, String address){
         this.name = name;
         this.email = email;
         this.cpf = cpf;
         this.telephone = telephone;
         this.address = address;
+        this.isDeleted = false;
     }
 }
