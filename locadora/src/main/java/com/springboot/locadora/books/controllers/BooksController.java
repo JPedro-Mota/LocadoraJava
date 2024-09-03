@@ -18,27 +18,27 @@ public class BooksController {
     @Autowired
     private BooksServices booksServices;
 
-    @PostMapping("/books")
+    @PostMapping("/book")
     public ResponseEntity<Void> create(@RequestBody @Valid CreateBookRecordDTO data) {
         return booksServices.create(data);
     }
 
-    @GetMapping("/books")
+    @GetMapping("/book")
     public ResponseEntity<List<BooksEntity>> getAllBooks() {
         return booksServices.findAll();
     }
 
-    @GetMapping("/books/{id}")
+    @GetMapping("/book/{id}")
     public ResponseEntity<BooksEntity> getById(@PathVariable(value = "id") int id){
         return ResponseEntity.status(HttpStatus.OK).body((booksServices.findById(id).get()));
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/book/{id}")
     public ResponseEntity<Object> update(@PathVariable(value="id") int id, @RequestBody @Valid UpdateBookRecordDTO updateBookRecordDTO){
         return booksServices.update(id, updateBookRecordDTO);
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/book/{id}")
     public ResponseEntity<Object> delete(@PathVariable(value="id") int id){
         return booksServices.delete(id);
     }

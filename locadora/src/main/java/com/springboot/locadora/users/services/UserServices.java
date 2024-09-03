@@ -26,6 +26,9 @@ public class UserServices {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private UserValidation userValidation;
 
     public ResponseEntity<Void> create(@Valid CreateUserRecordDTO data) {

@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,17 +22,27 @@ public class SecurityConfig {
     @Autowired
     SecurityFilter securityFilter;
 
+    @Autowired
+    CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration corsConfig = new CorsConfiguration();
+                    corsConfig.applyPermitDefaultValues();
+                    corsConfig.addAllowedOrigin("");
+                    corsConfig.addAllowedMethod("");
+                    return corsConfig;}))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers(HttpMethod.POST, "/user").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/publisher").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/renter").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/books").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers("/user/**").permitAll()
+                                .requestMatchers( "/publisher/**").permitAll()
+                                .requestMatchers("/renter/**").permitAll()
+                                .requestMatchers("/rents/**").permitAll()
+                                .requestMatchers( "/books/**").permitAll()
+                                .requestMatchers( "/auth/login").permitAll()
 //                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
