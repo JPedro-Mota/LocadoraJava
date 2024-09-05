@@ -26,9 +26,9 @@ public class PublisherServices {
     public ResponseEntity<PublisherEntity> create(@Valid CreatePublisherRecordDTO data){
 
         PublisherEntity newPublisher = new PublisherEntity(data.name(), data.email(), data.telephone(), data.site());
-        publisherRepository.save(newPublisher);
+        PublisherEntity savedPublisher = publisherRepository.save(newPublisher);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(publisherRepository.save(new PublisherEntity()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPublisher);
     }
 
     public List<PublisherEntity> findAll(){
@@ -56,7 +56,9 @@ public class PublisherServices {
         if(response.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publisher not found.");
         }
-        publisherRepository.save(response.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Publisher deleted successfully.");
+        PublisherEntity publisher = response.get();
+        publisher.setDeleted(true);
+        publisherRepository.save(publisher);
+        return ResponseEntity.status(HttpStatus.OK).body("Publisher deleted sucessfully.");
     }
 }

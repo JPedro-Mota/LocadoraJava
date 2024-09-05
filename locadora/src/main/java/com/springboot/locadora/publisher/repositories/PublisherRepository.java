@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PublisherRepository extends JpaRepository<PublisherEntity, Integer > {
-    UserDetails findByName(String name);
+    PublisherEntity findByName(String name);
     List<PublisherEntity> findAllByIsDeletedFalse();
     PublisherEntity findByEmail(String email);
     PublisherEntity findBySite(String site);
-    PublisherEntity findByTelephone(String telephone);
+    PublisherEntity findByTelephone(int telephone);
 }

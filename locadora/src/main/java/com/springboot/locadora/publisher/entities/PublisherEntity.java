@@ -25,13 +25,13 @@ public class PublisherEntity {
     @Email
     private String email;
 
-    private String telephone;
+    private int telephone;
 
     private String site;
 
     private boolean isDeleted;
 
-    public PublisherEntity(String name, String email, String telephone, String site){
+    public PublisherEntity(String name, String email, int telephone, String site){
         this.name = name;
         this.email = email;
         this.telephone = telephone;

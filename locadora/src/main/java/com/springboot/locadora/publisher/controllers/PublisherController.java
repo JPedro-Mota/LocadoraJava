@@ -29,13 +29,15 @@ public class PublisherController {
     PublisherMapper publisherMapper;
 
     @PostMapping("/publisher")
-    public ResponseEntity<PublisherEntity> save(@Valid CreatePublisherRecordDTO createPublisherRecordDTO){
+    public ResponseEntity<PublisherEntity> save(@Valid @RequestBody CreatePublisherRecordDTO createPublisherRecordDTO) {
         return publisherServices.create(createPublisherRecordDTO);
     }
 
     @GetMapping("/publisher")
-    public ResponseEntity<List<PublisherEntity>> getAllPublisher(){
-        return ResponseEntity.status(HttpStatus.OK).body(publisherRepository.findAll());
+    public ResponseEntity<List<PublisherRecordDTO>> getAllPublisher() {
+        List<PublisherEntity> publishers = publisherServices.findAll();
+        List<PublisherRecordDTO> publisherDTOs = publisherMapper.toPublisherReponseList(publishers);
+        return ResponseEntity.status(HttpStatus.OK).body(publisherDTOs);
     }
 
     @GetMapping("/publisher/{id}")
@@ -44,12 +46,12 @@ public class PublisherController {
     }
 
     @PutMapping("/publisher/{id}")
-    public ResponseEntity<Object> update (@PathVariable(value="id") int id, @Valid UpdatePublisherRecordDTO updatePublisherRecordDTO){
+    public ResponseEntity<Object> update (@PathVariable(value="id") int id, @RequestBody @Valid UpdatePublisherRecordDTO updatePublisherRecordDTO){
         return publisherServices.update(id, updatePublisherRecordDTO);
     }
 
     @DeleteMapping("/publisher/{id}")
-    public ResponseEntity<Object> deletePublisher(@PathVariable(value="id") int id){
+    public ResponseEntity<Object> delete(@PathVariable(value="id") int id){
         return publisherServices.delete(id);
     }
 }

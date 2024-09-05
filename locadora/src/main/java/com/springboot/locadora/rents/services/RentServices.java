@@ -5,6 +5,7 @@ import com.springboot.locadora.books.repositories.BooksRepository;
 import com.springboot.locadora.renters.entities.RenterEntity;
 import com.springboot.locadora.renters.repositories.RenterRepository;
 import com.springboot.locadora.rents.DTOs.CreateRentsRecordDTO;
+import com.springboot.locadora.rents.DTOs.RentsWithNamesDTO;
 import com.springboot.locadora.rents.DTOs.UpdateRentsRecordDTO;
 import com.springboot.locadora.rents.entities.RentsEntity;
 import com.springboot.locadora.rents.enums.RentStatusEnum;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RentServices {
@@ -51,15 +54,28 @@ public class RentServices {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<List<RentsEntity>> findAll() {
+    public ResponseEntity<List<RentsWithNamesDTO>> findAll() {
         List<RentsEntity> rents = rentRepository.findAll();
         if (rents.isEmpty()) throw new ModelNotFoundException();
-        return ResponseEntity.ok(rents);
+        List<RentsWithNamesDTO> dtos = rents.stream()
+                .map(RentsWithNamesDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     public Optional<RenterEntity> findById(int id) {
         return renterRepository.findById(id);
     }
+
+    public String getBookNameById(int id) {
+        return booksRepository.findBookNameById(id);
+    }
+
+
+    public String getRenterNameById(int id) {
+        return renterRepository.findRenterNameById(id);
+    }
+
 
     public ResponseEntity<Object> delivered(int id, @Valid UpdateRentsRecordDTO rentsRecordDto) {
         Optional<RentsEntity> rentOptional = rentRepository.findById(id);

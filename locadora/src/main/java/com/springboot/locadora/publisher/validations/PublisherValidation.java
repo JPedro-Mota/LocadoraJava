@@ -38,9 +38,9 @@ public class PublisherValidation {
         }
     }
 
-    public  void validTelephone(CreatePublisherRecordDTO data){
-        if(publisherRepository.findByTelephone(data.telephone()) !=null ){
-            throw new CustomValidationException("This telephone is alredy in use.");
+    public void validTelephone(CreatePublisherRecordDTO data) {
+        if (publisherRepository.findByTelephone(data.telephone()) != null) {
+            throw new CustomValidationException("This telephone is already in use.");
         }
     }
 

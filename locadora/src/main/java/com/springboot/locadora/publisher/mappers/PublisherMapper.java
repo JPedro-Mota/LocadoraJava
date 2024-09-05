@@ -18,6 +18,9 @@ public class PublisherMapper {
                 .builder()
                 .id(model.getId())
                 .name(model.getName())
+                .email(model.getEmail())
+                .telephone(model.getTelephone())
+                .site(model.getSite())
                 .build();
     }
 }
