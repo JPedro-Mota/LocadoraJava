@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,6 +40,10 @@ public class RentServices {
 
     public ResponseEntity<Void> create(@Valid CreateRentsRecordDTO data) {
 
+        rentValidation.validateDeadLine(data);
+        rentValidation.validateRenterId(data);
+        rentValidation.validateBookId(data);
+
         RenterEntity renter = renterRepository.findById(data.renterId())
                 .orElseThrow(() -> new IllegalArgumentException("Renter not found"));
 
@@ -60,6 +63,7 @@ public class RentServices {
         List<RentsWithNamesDTO> dtos = rents.stream()
                 .map(RentsWithNamesDTO::fromEntity)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(dtos);
     }
 
@@ -107,11 +111,11 @@ public class RentServices {
         rentValidation.validateDeadLineUpdate(updateRentRecordDTO);
         rentValidation.validateBookTotalQuantity(book);
 
-        RentsEntity rentModel = rentOptional.get();
-        rentModel.setBook(book);
-        rentModel.setRenter(renter);
+        RentsEntity rentEntity = rentOptional.get();
+        rentEntity.setBook(book);
+        rentEntity.setRenter(renter);
 
-        rentRepository.save(rentModel);
+        rentRepository.save(rentEntity);
 
         return ResponseEntity.status(HttpStatus.OK).body("Rent updated successfully");
     }

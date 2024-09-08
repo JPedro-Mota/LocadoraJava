@@ -3,6 +3,7 @@ package com.springboot.locadora.configurations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,8 +44,10 @@ public class SecurityConfig {
                                 .requestMatchers("/renter/**").permitAll()
                                 .requestMatchers("/rents/**").permitAll()
                                 .requestMatchers( "/books/**").permitAll()
-                                .requestMatchers( "/auth/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/forgot").permitAll()
+
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -39,10 +39,18 @@ public class DashboardController {
         return ResponseEntity.status(HttpStatus.OK).body(dashboardServices.getDeliveredWithDelay());
     }
 
+    @GetMapping("/rentsInTime")
+    public ResponseEntity<Integer> getRentsInTime(){
+        return ResponseEntity.status(HttpStatus.OK).body(dashboardServices.getDeliveredInTime());
+    }
+
+
     @GetMapping("/rentsPerRenter")
     public ResponseEntity<Object> getRentsPerRenter(){
         return ResponseEntity.status(HttpStatus.OK).body(dashboardServices.getRentsPerRenter());
     }
+
+
 
     @GetMapping("/bookMoreRented")
     public ResponseEntity<Object> getBooksMoreRented(){

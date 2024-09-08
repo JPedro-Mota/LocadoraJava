@@ -29,6 +29,7 @@ public class RentValidation {
     RentRepository rentRepository;
 
     public void validateRenterId(CreateRentsRecordDTO data) {
+
         if (renterRepository.findById(data.renterId()).isEmpty()) {
             throw new CustomValidationException("Renter not found");
         }

@@ -14,8 +14,8 @@ public record RentsWithNamesDTO(
     public static RentsWithNamesDTO fromEntity(RentsEntity rent) {
         return new RentsWithNamesDTO(
                 rent.getId(),
-                rent.getBook().getName(), // Assumindo que BooksEntity tem um método getName()
-                rent.getRenter().getName(), // Assumindo que RenterEntity tem um método getName()
+                rent.getBook().getName(),
+                rent.getRenter().getName(),
                 rent.getDeadLine(),
                 rent.getStatus().name()
         );
