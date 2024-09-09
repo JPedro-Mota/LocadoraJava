@@ -8,16 +8,14 @@ public record RentsWithNamesDTO(
         int id,
         String bookName,
         String renterName,
-        LocalDate deadLine,
-        String status
+        LocalDate deadLine
 ) {
     public static RentsWithNamesDTO fromEntity(RentsEntity rent) {
         return new RentsWithNamesDTO(
                 rent.getId(),
                 rent.getBook().getName(),
                 rent.getRenter().getName(),
-                rent.getDeadLine(),
-                rent.getStatus().name()
+                rent.getDeadLine()
         );
     }
 }

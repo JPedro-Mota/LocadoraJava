@@ -31,7 +31,7 @@ public class RentsController {
     }
 
     @GetMapping("/rents")
-    public ResponseEntity<List<RentsWithNamesDTO>> getAllRents() {
+    public List<RentsEntity> getAllRents() {
         return rentServices.findAll();
     }
 

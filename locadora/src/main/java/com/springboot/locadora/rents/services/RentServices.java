@@ -57,14 +57,13 @@ public class RentServices {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<List<RentsWithNamesDTO>> findAll() {
+    public List<RentsEntity> findAll() {
         List<RentsEntity> rents = rentRepository.findAll();
         if (rents.isEmpty()) throw new ModelNotFoundException();
-        List<RentsWithNamesDTO> dtos = rents.stream()
-                .map(RentsWithNamesDTO::fromEntity)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
+       for (RentsEntity rent : rents){
+           rentValidation.setRentStatus(rent);
+       }
+        return rents;
     }
 
     public Optional<RenterEntity> findById(int id) {
@@ -101,6 +100,7 @@ public class RentServices {
         if (rentOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rent not found");
         }
+
 
         rentValidation.validateRenterIdUpdate(updateRentRecordDTO);
         RenterEntity renter = renterRepository.findById(updateRentRecordDTO.renterId()).get();

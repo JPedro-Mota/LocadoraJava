@@ -25,15 +25,5 @@ public class UserValidation {
         }
     }
 
-    public void validateUpdateEmail(UpdateUserRecordDTO data) {
-        if (userRepository.findByEmail(data.email()) != null) {
-            throw new CustomValidationException("Email already in use.");
-        }
-    }
 
-    public void validateUpdateName(UpdateUserRecordDTO data){
-        if (userRepository.findByName(data.name()) != null){
-            throw new CustomValidationException("Name already in use");
-        }
-    }
 }

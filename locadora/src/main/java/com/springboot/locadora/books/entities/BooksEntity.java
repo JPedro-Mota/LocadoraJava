@@ -1,5 +1,6 @@
 package com.springboot.locadora.books.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.springboot.locadora.publisher.entities.PublisherEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

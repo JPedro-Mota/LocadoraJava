@@ -67,8 +67,6 @@ public class UserServices {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        userValidation.validateUpdateEmail(updateUserRecordDTO);
-        userValidation.validateUpdateName(updateUserRecordDTO);
         UserEntity userEntity = response.get();
         BeanUtils.copyProperties(updateUserRecordDTO, userEntity);
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(userEntity));

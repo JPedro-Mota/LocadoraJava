@@ -12,8 +12,11 @@ import com.springboot.locadora.rents.repositories.RentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardServices {
@@ -37,11 +40,11 @@ public class DashboardServices {
         return rentsQuantity;
     }
 
-    public int getNumberOfRentalsLate(){
+    public int getNumberOfRentalsLate() {
+        updateLateRentals();
         List<RentsEntity> totalRentalsLate = rentRepository.findAllByStatus(RentStatusEnum.LATE);
         int rentsLateQuantity = totalRentalsLate.size();
-
-        return rentsLateQuantity;
+        return totalRentalsLate.size();
     }
 
     public int getDeliveredInTime(){
@@ -68,10 +71,26 @@ public class DashboardServices {
             renterRentList.add(new RentsPerRenterRecordDTO(renter.getName(), rents.size(), rentsActive.size()));
         }
 
-        return renterRentList;
+        return renterRentList.stream()
+                .sorted(Comparator.comparingInt(RentsPerRenterRecordDTO::rentsQuantity).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
     }
 
     public List<BooksMoreRentedDTO> getBooksMoreRented(){
         return bookRentMapper.toBooksMoreRentedList(booksRepository.findAll());
     }
+
+    public void updateLateRentals() {
+        List<RentsEntity> rentedRents = rentRepository.findAllByStatus(RentStatusEnum.RENTED);
+        LocalDate today = LocalDate.now();
+
+        for (RentsEntity rent : rentedRents) {
+            if (rent.getDeadLine().isBefore(today)) {
+                rent.setStatus(RentStatusEnum.LATE);
+                rentRepository.save(rent);
+            }
+        }
+    }
+
 }

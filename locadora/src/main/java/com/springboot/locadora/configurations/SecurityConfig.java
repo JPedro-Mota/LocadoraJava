@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/renter/**").permitAll()
                                 .requestMatchers("/rents/**").permitAll()
                                 .requestMatchers( "/books/**").permitAll()
+                                .requestMatchers( "/dashboard/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/forgot").permitAll()

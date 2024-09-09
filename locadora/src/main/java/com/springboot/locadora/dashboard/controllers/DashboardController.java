@@ -30,9 +30,10 @@ public class DashboardController {
     }
 
     @GetMapping("/rentsLateQuantity")
-    public ResponseEntity<Integer> getById(@PathVariable(value = "id") int id) {
+    public ResponseEntity<Integer> getNumberOfRentalsLate() {
         return ResponseEntity.status(HttpStatus.OK).body(dashboardServices.getNumberOfRentalsLate());
     }
+
 
     @GetMapping("/deliveredWithDelayQuantity")
     public ResponseEntity<Integer> getRentsDeliveredWithDelay(){

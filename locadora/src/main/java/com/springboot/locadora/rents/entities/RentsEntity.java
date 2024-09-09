@@ -1,7 +1,6 @@
 package com.springboot.locadora.rents.entities;
 
 import com.springboot.locadora.books.entities.BooksEntity;
-import com.springboot.locadora.publisher.entities.PublisherEntity;
 import com.springboot.locadora.renters.entities.RenterEntity;
 import com.springboot.locadora.rents.enums.RentStatusEnum;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-
 
 @Getter
 @Setter
@@ -48,12 +46,23 @@ public class RentsEntity {
         this.deadLine = deadLine;
         this.rentDate = LocalDate.now();
         this.status = determineStatus(deadLine, devolutionDate, rentDate);
-
     }
 
     private RentStatusEnum determineStatus(LocalDate deadLine, LocalDate devolutionDate, LocalDate rentDate) {
-        if (deadLine.isBefore(LocalDate.now())) return RentStatusEnum.LATE;
-        else if (devolutionDate == null) return RentStatusEnum.RENTED;
-        else return devolutionDate.isAfter(deadLine) ? RentStatusEnum.DELIVERED_WITH_DELAY : RentStatusEnum.IN_TIME;
+        LocalDate now = LocalDate.now();
+
+        if (devolutionDate != null) {
+            return devolutionDate.isAfter(deadLine) ? RentStatusEnum.DELIVERED_WITH_DELAY : RentStatusEnum.IN_TIME;
+        } else {
+            return now.isAfter(deadLine) ? RentStatusEnum.LATE : RentStatusEnum.RENTED;
         }
     }
+
+    public String getBookName() {
+        return book != null ? book.getName() : null;
+    }
+
+    public String getRenterName() {
+        return renter != null ? renter.getName() : null;
+    }
+}

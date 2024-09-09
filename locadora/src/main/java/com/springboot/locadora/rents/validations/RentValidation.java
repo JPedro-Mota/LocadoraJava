@@ -2,7 +2,6 @@ package com.springboot.locadora.rents.validations;
 
 import com.springboot.locadora.books.entities.BooksEntity;
 import com.springboot.locadora.books.repositories.BooksRepository;
-import com.springboot.locadora.renters.DTOs.UpdateRenterRecordDTO;
 import com.springboot.locadora.renters.entities.RenterEntity;
 import com.springboot.locadora.renters.repositories.RenterRepository;
 import com.springboot.locadora.rents.DTOs.CreateRentsRecordDTO;
