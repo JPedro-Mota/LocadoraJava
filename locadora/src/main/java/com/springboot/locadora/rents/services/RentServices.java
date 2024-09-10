@@ -101,7 +101,6 @@ public class RentServices {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rent not found");
         }
 
-
         rentValidation.validateRenterIdUpdate(updateRentRecordDTO);
         RenterEntity renter = renterRepository.findById(updateRentRecordDTO.renterId()).get();
 

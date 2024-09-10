@@ -45,4 +45,9 @@ public class BooksEntity {
         this.publisher = publisher;
         this.isDeleted = false;
     }
+
+    public String getPublisherName() {
+        return publisher != null ? publisher.getName() : null;
+    }
+
 }
